@@ -1,12 +1,18 @@
 import React from 'react'
 import './App.css'
 
-const Modal = () => {
+const Modal = (props) => {
+  console.log(props)
+
   return (
     <div className="modal">
-        <h4>제목</h4>
-        <p>날짜</p>
-        <p>상세내용</p>
+        <h4>제목: {props.post[props.postnum].title}</h4>
+        <p>날짜: {props.post[props.postnum].date}</p>
+        <p>상세내용: {props.post[props.postnum].content}</p>
+
+        <button onClick={()=>{
+          props.setModal(false);
+        }}>창 닫기</button>
     </div>
   )
 }

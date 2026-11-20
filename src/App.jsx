@@ -3,9 +3,43 @@ import './App.css'
 import Modal from './Modal';
 
 function App() {
-  const [title, setTitle] = useState(['경기도','강원도','제주도']);
+  const [post, setPost] = useState([
+    {
+      title: '경기도',
+      date: '11월 19일',
+      content: '수원시, 성남시, 용인시, 화성시'
+    },
+    {
+      title: '강원도',
+      date: '11월 18일',
+      content: '원주시, 강릉시, 태백시'
+    },
+    {
+      title: '제주도',
+      date: '11월 17일',
+      content: '제주시, 서귀포시'
+    }
+  ]);
+  const [postnum, setPostnum] = useState(0);
   const [clickup, setClickup] = useState([0,0,0]);
   const [modal, setModal] = useState(false);
+  const [input, setInput] = useState('');
+
+  const insertBtn = ()=> {
+    let copy = [...post];
+
+    copy.unshift({
+      title: input,
+      date: '11월 20일',
+      content: ''
+    });
+    setPost(copy);
+    setInput('');
+
+    let copy2 = [...clickup];
+    copy2.unshift(0);
+    setClickup(copy2);
+  }
 
   return (
     <>
@@ -15,32 +49,43 @@ function App() {
         </div>
 
         {
-          title.map((tit,i)=>
+          post.map((p,i)=>
             <div className="list" key={i}>
               <h4 onClick={() => {
-                  // modal === true ? setModal(false) : setModal(true);
-                  setModal(!modal);
-                }}>{tit} <span onClick={(e)=> {
-                  let copy = [...clickup];
-                  copy[i] = clickup[i] + 1;
-                  setClickup(copy);
-                  e.stopPropagation();
-                }}>👍</span>{clickup[i]}</h4>
-              <p>11월 19일</p>
+                // modal === true ? setModal(false) : setModal(true);
+                setModal(true);
+                setPostnum(i);
+              }}>{p.title} <span onClick={(e)=> {
+                let copy = [...clickup];
+                copy[i] = clickup[i] + 1;
+                setClickup(copy);
+                e.stopPropagation();
+              }}>👍</span>{clickup[i]}</h4>
+              <p>{p.date}</p>
+
+              <button onClick={()=>{
+                let copy = [...post];
+                copy.splice(i,1);
+                setPost(copy);
+
+                let copy2 = [...clickup];
+                copy2.splice(i,1);
+                setClickup(copy2);
+              }}>글 삭제</button>
             </div>
           )
         }
         
-        <button onClick={()=> {
-            let copy = [...title];
-            copy.sort();
-            setTitle(copy);
-          }}>제목 정렬</button>
+        <input type="text" onChange={(e)=>{
+          setInput(e.target.value);
+        }} value={input} />
+
+        <button onClick={insertBtn}>글 추가</button>
 
 
-          {
-             modal === true ? <Modal/> : null
-          }
+        {
+            modal === true && <Modal post={post} postnum={postnum} setModal={setModal}/>
+        }
       </div>
     </>
   )
